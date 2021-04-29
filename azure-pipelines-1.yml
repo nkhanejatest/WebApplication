@@ -43,10 +43,12 @@ steps:
     projects: '**/*.csproj'
     arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     modifyOutputPath: false
-  displayName: 'Publish Artifacts'
+  displayName: 'Publish'
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))  
 
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
   displayName: 'Publish Artifacts'
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))  
