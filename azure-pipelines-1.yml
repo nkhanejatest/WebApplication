@@ -5,6 +5,9 @@ pr:
  branches:
     include:
       - '*'
+    exclude:
+      - master
+      - dev
 pool:
   vmImage: 'ubuntu-latest'
  
