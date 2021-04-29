@@ -3,7 +3,7 @@ trigger:
   - master
   - dev
 pr: 
- branches:
+  branches:
     include:
       - '*'
     exclude:
