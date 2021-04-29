@@ -1,7 +1,9 @@
 name : Rheia_Orchestrator_CI
 trigger:
-  - master
-  - dev
+  branches:
+    include:
+      - development
+      - master
  
 pool:
   vmImage: 'ubuntu-latest'
