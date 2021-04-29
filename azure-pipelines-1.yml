@@ -1,6 +1,7 @@
 name : Rheia_Orchestrator_CI
 trigger:
-  - none
+  - master
+  - dev
 pr: 
  branches:
     include:
