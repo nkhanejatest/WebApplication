@@ -1,15 +1,14 @@
 name : Rheia_Orchestrator_CI
 trigger:
-  - master
-  - dev
+- master
+- dev
 pr: 
- branches:
+  branches:
     include:
-      - '*'
+    - '*'
     exclude:
-      - master
-      - dev
-
+    - master
+    - dev
 pool:
   vmImage: 'ubuntu-latest'
  
@@ -45,9 +44,11 @@ steps:
     arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     modifyOutputPath: false
   displayName: 'Publish'
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))  
 
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
   displayName: 'Publish Artifacts'
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))  
