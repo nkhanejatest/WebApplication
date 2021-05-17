@@ -5,6 +5,7 @@ trigger:
 pr:
   branches:
     include: ['*']
+    exclude: ['dev', 'master']
 pool:
   vmImage: 'windows-latest'
  
