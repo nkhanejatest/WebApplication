@@ -1,10 +1,9 @@
 trigger:
 - master
 - dev
-pr: 
+pr:
   branches:
-    include:
-    - '*'
+    include: ['*']
 pool:
   vmImage: 'windows-latest' 
 steps:
