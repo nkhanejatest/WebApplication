@@ -1,38 +1,36 @@
-name : Rheia_Orchestrator_CI
+name: Rheia_Orchestrator_CI
 trigger:
-- master
-- dev
-pr: 
-  branches:
-    include:
-    - '*'
-    exclude:
-    - master
-    - dev
+   -  master
+   -  dev
+pr:
+    branches:
+        include:
+           -  '*'
+        exclude:
+           -  master
+           -  dev
 pool:
-  vmImage: 'windows-latest'
- 
+    vmImage: windows-latest
 variables:
-  solution: '**/Orchestrator.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
- 
+    solution: '**/Orchestrator.sln'
+    buildPlatform: Any CPU
+    buildConfiguration: Release
 steps:
-- task: NuGetToolInstaller@1
+   -  task: NuGetToolInstaller@1
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
-    feedsToUse: config
-    nugetConfigPath: nuget.config
- 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'build'
-    projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration)'
-  displayName: 'Build project'
- 
+   -  task: NuGetCommand@2
+      inputs:
+          restoreSolution: $(solution)
+          feedsToUse: config
+          nugetConfigPath: nuget.config
+
+   -  task: DotNetCoreCLI@2
+      inputs:
+          command: build
+          projects: '**/*.csproj'
+          arguments: --configuration $(buildConfiguration)
+      displayName: Build project
+
 #- task: DotNetCoreCLI@2
 #  displayName: Test
 #  inputs:
@@ -40,19 +38,19 @@ steps:
 #    projects: '**Test*/*.csproj'
 #    arguments: '--configuration $(BuildConfiguration)'
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'publish'
-    publishWebProjects: true
-    projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    modifyOutputPath: false
-  displayName: 'Publish'
-  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+   -  task: DotNetCoreCLI@2
+      inputs:
+          command: publish
+          publishWebProjects: true
+          projects: '**/*.csproj'
+          arguments: --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)
+          modifyOutputPath: false
+      displayName: Publish
+      condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-  displayName: 'Publish Artifacts'
-  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+   -  task: PublishBuildArtifacts@1
+      inputs:
+          PathtoPublish: $(Build.ArtifactStagingDirectory)
+          ArtifactName: drop
+      displayName: Publish Artifacts
+      condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
