@@ -10,17 +10,21 @@ pr:
     - master
     - dev
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'windows-latest'
  
 variables:
+  solution: '**/Orchestrator.sln'
+  buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
  
 steps:
-- task: DotNetCoreCLI@2
+- task: NuGetToolInstaller@1
+
+- task: NuGetCommand@2
   inputs:
-    command: 'restore'
-    projects: '**/*.csproj'
-  displayName: 'Restore Nuget Packages'
+    restoreSolution: '$(solution)'
+    feedsToUse: config
+    nugetConfigPath: nuget.config
  
 - task: DotNetCoreCLI@2
   inputs:
@@ -29,13 +33,13 @@ steps:
     arguments: '--configuration $(buildConfiguration)'
   displayName: 'Build project'
  
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'test'
-    projects: '**/*[tT]ests/*.csproj'
-    arguments: '--configuration $(buildConfiguration)'
-  displayName: 'Run Tests'
- 
+#- task: DotNetCoreCLI@2
+#  displayName: Test
+#  inputs:
+#    command: test
+#    projects: '**Test*/*.csproj'
+#    arguments: '--configuration $(BuildConfiguration)'
+
 - task: DotNetCoreCLI@2
   inputs:
     command: 'publish'
@@ -44,11 +48,11 @@ steps:
     arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     modifyOutputPath: false
   displayName: 'Publish'
-  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))  
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
   displayName: 'Publish Artifacts'
-  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))  
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
